@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark | Arquitecto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Importamos Titillium Web y Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Titillium+Web:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Titillium Web"', 'sans-serif'],
+                        display: ['"Anderson Grotesk"', '"Space Grotesk"', 'sans-serif'],
+                    },
+                    colors: {
+                        'mark-white': '#FFFFFF',
+                        'mark-black': '#000000',
+                        'mark-dark': '#264253',
+                        'mark-mint': '#C7EDD1',
+                        'mark-gray': '#F8F9FA',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @font-face {
+            font-family: 'Anderson Grotesk';
+            src: url('assets/fonts/AndersonGrotesk-Bold.woff2') format('woff2');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fff; }
+        ::-webkit-scrollbar-thumb { background: #264253; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #000; }
+        
+        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        
+        .project-overlay {
+            background: linear-gradient(to top, rgba(38, 66, 83, 0.9) 0%, rgba(38, 66, 83, 0) 100%);
+        }
+    </style>
+</head>
+<body class="bg-mark-white text-mark-black antialiased selection:bg-mark-mint selection:text-mark-dark">
+
+    <!-- BASE DE DATOS ACTUALIZADA CON TIPOS -->
+    <script>
+        const projectsData = [
+            // OBRAS (Construido / Dirección / Reforma)
+            {
+                id: "dd",
+                type: "obra", 
+                title: "Casa DD",
+                category: "Dirección & Re-Diseño",
+                location: "Mercedes, Pcia. de Buenos Aires - Argentina",
+                folder: "dd",
+                shortDesc: "Interpretación de deseos en una vivienda evolutiva.",
+                fullDesc: "El proceso de Casa DD se definió por la reinterpretación. Comenzando con un rol de dirección sobre un proyecto preexistente, el desafío fue reajustar decisiones de diseño en tiempo real para adaptarse a una dinámica familiar cambiante. La obra se convirtió en una exploración de los deseos del cliente, materializados en la resolución obsesiva de los detalles: barandas esculturales, baños con impronta personal y un estudio lumínico que redefine la habitabilidad de la cocina y el estar.",
+                specs: "Reforma Integral | 2023"
+            },
+            {
+                id: "blanco-encalada",
+                type: "obra",
+                title: "Casa Blanco Encalada",
+                category: "Vivienda Unifamiliar (PH)",
+                location: "Ciudad Autónoma de Buenos Aires. - Argentina",
+                folder: "blanco-encalada",
+                shortDesc: "Permeabilidad y luz en la trama urbana densa.",
+                fullDesc: "En un PH de dimensiones acotadas, la estrategia fue la permeabilidad total. Buscamos generar continuidades visuales y de circulación que multiplicaran la entrada de luz. Con el desafío de la seguridad para una familia con tres hijos, cada espacio fue diseñado para ofrecer experiencias materiales distintas: desde una sala de TV flexible que oscila entre lo privado y lo común, hasta una terraza con quincho que actúa como oasis urbano, aislando la vivienda del ruido de la calle.",
+                specs: "Proyecto y Dirección | 2024"
+            },
+            {
+                id: "buen-dia-dia",
+                type: "obra",
+                title: "Club Cultural Buen Día Día",
+                category: "Preservación & Cultura",
+                location: "Villa Adelina, Buenos Aires - Argentina",
+                folder: "buen-dia-dia",
+                shortDesc: "Identidad y memoria en el espacio cultural.",
+                fullDesc: "Trabajamos en la preservación de la identidad del lugar, interviniendo con respeto sobre lo existente para potenciar las nuevas dinámicas culturales sin borrar la huella del pasado.",
+                specs: "Reforma | 2025"
+            },
+            
+            // VISUALES (Proyectos / Visualización / No construido)
+            {
+                id: "cabildo",
+                type: "visual",
+                title: "PH Cabildo",
+                category: "Vivienda",
+                location: "Ciudad Autónoma de Buenos Aires. - Argentina",
+                folder: "cabildo",
+                shortDesc: "Integridad y fluidez espacial.",
+                fullDesc: "Una búsqueda de integridad material y espacial, donde la vinculación entre los ambientes genera una nueva forma de habitar la tipología clásica del PH.",
+                specs: "Proyecto | 2022"
+            },
+            {
+                id: "debenedetti",
+                type: "obra",
+                title: "Deptos Debenedetti",
+                category: "Multifamiliar",
+                location: "Olivos, Vicente López, Pcia. de Buenos Aires - Argentina",
+                folder: "debenedetti",
+                shortDesc: "Construcción de espacios afectivos urbanos.",
+                fullDesc: "Más allá de la métrica inmobiliaria, este proyecto busca la construcción de espacios afectivos, logrando una vinculación armónica entre la densidad urbana y la intimidad doméstica.",
+                specs: "Visualización & Proyecto"
+            },
+            {
+                id: "zapala",
+                type: "visual",
+                title: "Casa Andrés-Marina",
+                category: "Vivienda Unifamiliar",
+                location: "Zapala - Pcia. Neuquen - Argentina",
+                folder: "zapala",
+                shortDesc: "Continuidad paisajística y material.",
+                fullDesc: "Un ejercicio de inserción en el paisaje, donde la continuidad visual y el uso de materiales locales dialogan con el entorno patagónico.",
+                specs: "Proyecto 2024"
+            },
+            {
+                id: "gate-gourmet",
+                type: "visual",
+                title: "Gate Gourmet",
+                category: "Industrial / Logística",
+                location: "Santiago de Chile",
+                folder: "gate-gourmet",
+                shortDesc: "Eficiencia y escala industrial.",
+                fullDesc: "Desarrollo técnico y visualización para infraestructura logística de gran escala.",
+                specs: "Visualización Internacional 2025"
+            },
+            {
+                id: "argerich",
+                type: "visual",
+                title: "Edificio Argerich",
+                category: "Multifamiliar",
+                location: "Florida, Vicente López, Pcia. de Buenos Aires - Argentina",
+                folder: "argerich",
+                shortDesc: "Vinculación urbana.",
+                fullDesc: "Exploración de la fachada y la relación interior-exterior en el tejido urbano.",
+                specs: "Visualización 2021"
+            }
+        ];
+    </script>
+
+    <!-- NAVEGACIÓN -->
+    <nav class="fixed w-full z-30 top-0 transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-gray-100" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- LOGO -->
+            <a href="#" class="block w-52 md:w-60 hover:opacity-80 transition-opacity">
+                <img src="assets/img/KMC LOGO.png" alt="KMC Logo" class="w-full h-auto object-contain">
+            </a>
+            
+            <div class="hidden md:flex space-x-10 text-sm font-semibold uppercase tracking-widest text-mark-dark">
+                <a href="#filosofia" class="hover:text-mark-mint transition-colors">Estudio</a>
+                <a href="#obras" class="hover:text-mark-mint transition-colors">Obras</a>
+                <a href="#visuales" class="hover:text-mark-mint transition-colors">Visuales</a>
+                <a href="#contacto" class="hover:text-mark-mint transition-colors">Contacto</a>
+            </div>
+
+            <!-- Botón Móvil -->
+            <button onclick="toggleMenu()" class="md:hidden text-mark-black focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
+        <!-- Menú Móvil -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 p-4 absolute w-full shadow-xl">
+            <a href="#filosofia" class="block py-3 text-mark-dark font-medium border-b border-gray-100" onclick="toggleMenu()">Estudio</a>
+            <a href="#obras" class="block py-3 text-mark-dark font-medium border-b border-gray-100" onclick="toggleMenu()">Obras</a>
+            <a href="#visuales" class="block py-3 text-mark-dark font-medium border-b border-gray-100" onclick="toggleMenu()">Visuales</a>
+            <a href="#contacto" class="block py-3 text-mark-dark font-medium" onclick="toggleMenu()">Contacto</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative pt-40 pb-20 px-6 min-h-[80vh] flex flex-col justify-center max-w-7xl mx-auto">
+        <div class="max-w-5xl fade-in-up" style="animation-delay: 0.1s;">
+            <p class="text-sm font-bold tracking-[0.2em] uppercase text-mark-dark mb-6">Arquitectura + Arte</p>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-tight mb-8 text-mark-black">
+                La materialización <br> <span class="text-mark-dark font-light italic">como compromiso.</span>
+            </h1>
+            <p class="text-xl md:text-2xl font-light text-gray-600 max-w-2xl leading-relaxed">
+                Integro el arte y el fotomontaje para fragmentar el espacio y reconfigurar nuevas realidades habitables. 
+                Busco en el "hacer" las respuestas, priorizando el contexto, la economía de recursos y una relación fluida con quien habita.
+            </p>
+        </div>
+        
+        <div class="absolute bottom-10 right-6 md:right-0 animate-bounce text-mark-dark">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </header>
+
+    <!-- SECCIÓN DE OBRAS -->
+    <section id="obras" class="py-24 bg-mark-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-end mb-16 border-b border-gray-300 pb-4">
+                <h2 class="text-4xl font-display font-bold tracking-tight text-mark-dark">Obras Realizadas</h2>
+                <span class="text-sm text-gray-500 hidden md:block font-bold">Materialización</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8" id="obras-grid">
+                <!-- Se inyectan items tipo 'obra' -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE VISUALES -->
+    <section id="visuales" class="py-24 bg-mark-gray">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-end mb-16 border-b border-gray-300 pb-4">
+                <h2 class="text-4xl font-display font-bold tracking-tight text-mark-dark">Visualización y Proyectos</h2>
+                <span class="text-sm text-gray-500 hidden md:block font-bold">Exploración</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="visuales-grid">
+                <!-- Se inyectan items tipo 'visual' -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ESTUDIO / BIO -->
+    <section id="filosofia" class="py-24 bg-mark-white">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12">
+            <div class="md:col-span-5 relative">
+                <div class="absolute -top-4 -left-4 w-20 h-20 bg-mark-mint rounded-full -z-10"></div>
+                <!-- IMAGEN DE PERFIL -->
+                <div class="w-full aspect-[3/4] bg-gray-200 mb-6 overflow-hidden shadow-2xl">
+                    <img src="assets/img/perfil/PERFIL.jpg" 
+                         onerror="this.src='https://ui-avatars.com/api/?name=Mark+Arq&background=C7EDD1&color=264253&size=500'" 
+                         alt="Mark Arquitecto" 
+                         class="w-full h-full object-cover hover:scale-105 transition-transform duration-700 grayscale hover:grayscale-0">
+                </div>
+            </div>
+            <div class="md:col-span-7 md:pl-10 flex flex-col justify-center">
+                <h3 class="text-sm font-bold tracking-[0.2em] uppercase text-mark-dark mb-4">Sobre Mark</h3>
+                <h2 class="text-3xl md:text-5xl font-display font-bold mb-8 leading-tight text-mark-black">
+                    "El hacer sitiado y la imaginación proyectual."
+                </h2>
+                <div class="prose prose-lg text-gray-600 space-y-6 text-justify">
+                    <p>
+                        Arquitecto con diez años de experiencia profesional y docente, mi carrera se define por una constante interconexión entre la práctica proyectual y la reflexión académica. Soy docente universitario en FADU-UBA, donde investigo y transmito conceptos fundamentales sobre el reconocimiento del "otro" dentro de los procesos creativos.
+                    </p>
+                    <p>
+                        Profesionalmente, mi foco está en la revalorización de espacios existentes y en la exploración de los lenguajes inherentes a cada material. He liderado proyectos de vivienda unifamiliar, multifamiliar y desarrollos urbanísticos.
+                    </p>
+                    <p>
+                        Mi fuerte es la producción de imágenes para poder traer las ideas a la realidad visual y poder trabajarlas de un modo eficiente previo a su materialización.
+                    </p>
+                    <div class="bg-mark-mint/30 p-6 border-l-4 border-mark-dark">
+                        <p class="italic text-mark-dark m-0">
+                            Actualmente, desarrollo gran parte de mi trabajo asociado con el estudio <strong>Kummer Filgueira</strong>. Mi rol se centra en la concepción y exploración proyectual, trabajando en sinergia con Rocío, quien focaliza en el rigor de la dirección de obra.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO (ACTUALIZADO) -->
+    <section id="contacto" class="py-24 bg-mark-dark text-white">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-6xl font-display font-bold mb-8">Creemos algo juntos.</h2>
+            <p class="text-xl text-mark-mint mb-12 max-w-2xl mx-auto font-light">
+                ¿Tienes un proyecto o una idea que quisieras materializar?
+                Hablemos sobre cómo llevarla a cabo.
+            </p>
+            
+            <div class="flex flex-col md:flex-row justify-center gap-6">
+                <a href="mailto:arquitectura.kmc@gmail.com" class="inline-block bg-mark-mint text-mark-dark px-10 py-4 text-lg font-bold hover:bg-white transition-all duration-300 tracking-wide uppercase shadow-lg">
+                    Enviar Correo
+                </a>
+                 <a href="https://wa.me/5491124032266" target="_blank" class="inline-block border-2 border-mark-mint text-mark-mint px-10 py-4 text-lg font-bold hover:bg-mark-mint hover:text-mark-dark transition-all duration-300 tracking-wide uppercase shadow-lg">
+                    WhatsApp Directo
+                </a>
+            </div>
+            
+            <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-mark-mint uppercase tracking-widest border-t border-mark-mint/20 pt-10">
+                <div>
+                    <span class="block text-white mb-2 font-bold">Ubicación</span>
+                    Zapala, Neuquén, Argentina
+                </div>
+                <div>
+                    <span class="block text-white mb-2 font-bold">Redes</span>
+                    <a href="https://www.instagram.com/kummerfilgueira_arqs/" target="_blank" class="hover:text-white transition-colors">Instagram</a>
+                </div>
+                <div>
+                    <span class="block text-white mb-2 font-bold">Academia</span>
+                    FADU - UBA
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-mark-black text-gray-500 py-6 text-center text-xs">
+        <p>&copy; 2025 KMC Arquitectura. Diseño Web Profesional.</p>
+    </footer>
+
+    <!-- MODAL -->
+    <div id="project-modal" class="fixed inset-0 z-[100] hidden bg-white overflow-y-auto">
+        <button onclick="closeModal()" class="fixed top-6 right-6 z-50 p-2 bg-mark-black text-white rounded-full hover:bg-mark-dark transition-colors shadow-lg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        
+        <div class="max-w-5xl mx-auto px-6 py-20">
+            <div id="modal-content" class="opacity-0 transition-opacity duration-500">
+                <!-- Contenido JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGICA JS -->
+    <script>
+        // Función generadora de tarjeta
+        function createCard(project) {
+            const imgPath = `assets/img/${project.folder}/portada.jpg`;
+            const card = document.createElement('div');
+            
+            // Las obras se ven un poco más grandes (menos items por fila en grid)
+            card.className = 'group relative block bg-white h-[450px] overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500';
+            card.onclick = () => openModal(project.id);
+            
+            card.innerHTML = `
+                <div class="absolute inset-0 bg-gray-200">
+                    <img src="${imgPath}" 
+                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=&quot;w-full h-full bg-gray-300 flex items-center justify-center text-gray-500 text-xs uppercase tracking-widest&quot;>${project.title} <br> (Sin Imagen)</div>'" 
+                         alt="${project.title}" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0">
+                </div>
+                <div class="absolute inset-0 project-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+                    <span class="text-xs text-mark-mint uppercase tracking-widest mb-2 border-l-2 border-mark-mint pl-2 font-bold">${project.category}</span>
+                    <h3 class="text-2xl font-display font-bold text-white leading-none">${project.title}</h3>
+                    <p class="text-gray-200 text-sm mt-2 line-clamp-2 font-light">${project.shortDesc}</p>
+                </div>
+            `;
+            return card;
+        }
+
+        // Renderizado filtrado
+        const obrasContainer = document.getElementById('obras-grid');
+        const visualesContainer = document.getElementById('visuales-grid');
+        
+        projectsData.forEach((project) => {
+            const card = createCard(project);
+            if (project.type === 'obra') {
+                obrasContainer.appendChild(card);
+            } else {
+                visualesContainer.appendChild(card);
+            }
+        });
+
+        // Lógica del Modal (Igual que antes)
+        const modal = document.getElementById('project-modal');
+        const modalContent = document.getElementById('modal-content');
+
+        function openModal(id) {
+            const project = projectsData.find(p => p.id === id);
+            if (!project) return;
+
+            const galleryHTML = [1, 2, 3].map(i => `
+                <div class="w-full h-64 md:h-96 bg-gray-100 mb-4 overflow-hidden shadow-md">
+                    <img src="assets/img/${project.folder}/foto-${i}.jpg" 
+                         onerror="this.style.display='none'"
+                         class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                </div>
+            `).join('');
+
+            modalContent.innerHTML = `
+                <span class="text-sm font-bold tracking-widest uppercase text-mark-dark mb-4 block border-b border-gray-200 pb-2">${project.category} — ${project.year || '2024'}</span>
+                <h2 class="text-5xl md:text-7xl font-display font-bold mb-8 text-mark-black leading-tight">${project.title}</h2>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16 pt-8">
+                    <div class="md:col-span-4 space-y-6 text-sm text-gray-600">
+                        <div class="bg-mark-gray p-4 rounded-lg">
+                            <p class="mb-2"><strong class="text-mark-dark uppercase block text-xs tracking-wider mb-1">Ubicación</strong> ${project.location}</p>
+                            <p><strong class="text-mark-dark uppercase block text-xs tracking-wider mb-1">Especificaciones</strong> ${project.specs}</p>
+                        </div>
+                    </div>
+                    <div class="md:col-span-8">
+                        <p class="text-xl md:text-2xl font-light leading-relaxed text-gray-800">${project.fullDesc}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="w-full h-96 bg-gray-200 col-span-1 md:col-span-2 overflow-hidden shadow-lg">
+                         <img src="assets/img/${project.folder}/portada.jpg" 
+                              onerror="this.parentElement.innerHTML='<div class=&quot;w-full h-full flex items-center justify-center bg-gray-100 text-gray-400&quot;>Imagen Principal no encontrada</div>'" 
+                              class="w-full h-full object-cover">
+                    </div>
+                    ${galleryHTML}
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => { modalContent.classList.remove('opacity-0'); }, 10);
+        }
+
+        function closeModal() {
+            modalContent.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
